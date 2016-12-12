@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/learning_paths/db" VERSION="20130712" COMMENT="XMLDB file for Moodle blocks/learning_paths"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+  	 <TABLE NAME="block_lp_objectives" COMMENT="Learning objectives defined in the course" NEXT="block_lp_paths">
+	      <FIELDS>
+	        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="training_type"/>
+	        <FIELD NAME="name" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="description"/>
+	        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="name" NEXT="course"/>
+	        <FIELD NAME="course" TYPE="int" LENGTH="10"  NOTNULL="true" SEQUENCE="false" PREVIOUS="description"/>
+	      </FIELDS>
+	      <KEYS>
+	        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="course_fk"/>
+	        <KEY NAME="coursefk" TYPE="foreign" FIELDS="course" REFTABLE="mdl_course" REFFIELDS="id" PREVIOUS="primary"/>
+	      </KEYS>
+      </TABLE>
+      <TABLE NAME="block_lp_paths" COMMENT="Learning paths defined in the course" NEXT="block_lp_items">
+	      <FIELDS>
+	        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="training_type"/>
+	        <FIELD NAME="name" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="description"/>
+	        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="name" NEXT="objectiveid"/>
+	        <FIELD NAME="objectiveid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="description"/>
+	      </FIELDS>
+	      <KEYS>
+	        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+	        <KEY NAME="objectivefk" TYPE="foreign" FIELDS="objectiveid" REFTABLE="mdl_learning_paths" REFFIELDS="id" PREVIOUS="primary"/>	      
+	      </KEYS>
+      </TABLE>
+       <TABLE NAME="block_lp_items" COMMENT="Items from the learning paths" NEXT="block_lp_enrollments">
+	      <FIELDS>
+	      	<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="pathid"/>
+	        <FIELD NAME="pathid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" NEXT="itemid"/>
+	        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="pathid" NEXT="moduleid"/>
+	        <FIELD NAME="moduleid" TYPE="int"  LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="itemid" NEXT="deadline"/>
+	        <FIELD NAME="deadline" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="module" NEXT="weight"/>
+	        <FIELD NAME="weight" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"  PREVIOUS="deadline" NEXT="action"/>
+	        <FIELD NAME="action" TYPE="char" LENGTH="125" NOTNULL="false" SEQUENCE="false" PREVIOUS="weight"/>
+	      </FIELDS>
+	      <KEYS>
+	        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="item_fk"/>
+	        <KEY NAME="item_fk" TYPE="foreign" FIELDS="itemid" REFTABLE="mdl_course_modules" REFFIELDS="id" PREVIOUS="primary"/>	      
+	      </KEYS>
+	      </TABLE>
+	     <TABLE NAME="block_lp_enrollments" COMMENT="Items from the learning paths" NEXT="block_lp_badges">
+	      <FIELDS>
+	      	<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="training_type"/>
+	        <FIELD NAME="pathid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" NEXT="userid"/>
+	        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="pathid" NEXT="startdate"/>
+	        <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="userid" NEXT="status"/>
+	        <FIELD NAME="status" TYPE="text"  NOTNULL="false" SEQUENCE="false" PREVIOUS="startdate"/>
+	      </FIELDS>
+	      <KEYS>
+	        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="item_fk"/>
+	        <KEY NAME="pathfk" TYPE="foreign" FIELDS="pathid" REFTABLE="mdl_learning_paths" REFFIELDS="id" PREVIOUS="primary"  NEXT="user_fk"/>	 
+	        <KEY NAME="userfk" TYPE="foreign" FIELDS="userid" REFTABLE="mdl_user" REFFIELDS="id" PREVIOUS="path_fk"/>
+	      </KEYS>
+	     </TABLE>  
+	     <TABLE NAME="block_lp_badges" COMMENT="Badges from the learning paths" >
+	      <FIELDS>
+	      	<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="pathid"/> 
+	      	<FIELD NAME="pathid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="badgeid"/>
+	      	<FIELD NAME="badgeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="pathid"/>
+	      </FIELDS>
+	      <KEYS>
+	        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="pathh_fk"/>
+	        <KEY NAME="pathfk" TYPE="foreign" FIELDS="pathid" REFTABLE="mdl_learning_paths" REFFIELDS="id" PREVIOUS="primary"  NEXT="badgefk"/>
+	        <KEY NAME="badgefk" TYPE="foreign" FIELDS="badgeid" REFTABLE="mdl_badges" REFFIELDS="id" PREVIOUS="pathfk" />	 
+	      </KEYS>
+	     </TABLE>	 
+  </TABLES>
+</XMLDB>
